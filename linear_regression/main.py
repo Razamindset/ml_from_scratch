@@ -27,6 +27,7 @@ def gradient_decent(m_now, b_now, points, lr):
         X = points.iloc[i].Hours_Study
         y = points.iloc[i].Score
 
+        # See notes for details
         m_gradient += -(2/n) * X * (y - ( m_now * X + b_now))
         b_gradient += -(2/n) * (y - ( m_now * X + b_now))
     
@@ -48,6 +49,6 @@ for i in range(epochs):
 
 
 print(m,b)
-plt.scatter(df.Hours_Study, df.Score)
+plt.scatter(df.Hours_Study, df.Score, color="green")
 plt.plot(list(range(0, 10)), [m * X + b for X in range(0, 10)], color="red")
 plt.show()
