@@ -21,10 +21,14 @@ def multi_input_gradient_decent(m, b, points, lr):
         y_pred = np.dot(m, X) + b
         error = (y - y_pred)
 
-        # Calculate the gradients using the formaula for mse
-        m_grad += -(2/n) * X * error
-        b_grad += -(2/n) * error
-    
+        # Calculate the gradients using the formaula for derivative of loss
+        # -2/n can be done either inside or outside the loop
+        m_grad +=  X * error
+        b_grad +=  error
+
+    m_grad =  -(2/n) * m_grad 
+    b_grad = -(2/n) * b_grad
+
     m = m - lr * m_grad
     b = b - lr * b_grad
 
