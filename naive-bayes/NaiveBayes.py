@@ -1,5 +1,7 @@
 import numpy as np
 
+# I need to come back to this algorithm later i just dont wanna waste more time at it right now
+
 class NaiveBayes():
     def __init__(self):
         pass
@@ -34,7 +36,7 @@ class NaiveBayes():
         
         # Calculate posterior probability for each class
         for idx, c in enumerate(self._classes):
-            prior = np.log(self._prior)
+            prior = np.log(self._prior[idx])
             posterior = np.sum(np.log(self._pdf(idx, x)))
             posterior = posterior + prior
             posteriors.append(posterior)
