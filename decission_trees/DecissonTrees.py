@@ -41,9 +41,26 @@ def information_gain(y, y_left, y_right):
 # gain = information_gain(y, y_left, y_right)
 # print(f"Information Gain: {gain:.3f}")
 
+# Split the data according to a specific feature and threshold
+def split_data(X, y, feature, threshold):
+    # X is 2D arary of n_samples and features
+    # y is 1D array of labels
+    # feature is the idx of the feature we should use to split at threshold
+
+    left_idx = X[:, feature] <= threshold
+    right_idx = X[:, feature] > threshold
+    return X[left_idx], X[right_idx], y[left_idx], y[right_idx]
+
 class Node:
-    def __init__(self):
-        pass
+    def __init__(self, feature=None, threshold=None, right=None, left=None, *, value=None):
+        self.feature = feature
+        self.threshold = threshold
+        self.right =right
+        self.left = left
+        self.value = value
+    
+    def is_leaf(self):
+        return self.value is not None
 
 class DecissionTree:
     def __init__(self):
