@@ -66,7 +66,33 @@ class DecissionTree:
     def __init__(self):
         pass
 
-    def fit(self):
+    def fit(self, X, y, depth=0):
+        # * The flow is something like this.
+        # 1. We start at a node. Inorder to go to the next node we need to find the feature and a threshold
+        # that is most suitable. i.e age <= 18 years or Gender
+
+        # 2. We split the data based on all the features and threshold one by one and calc information gain of each split.
+
+        # 3. To calculate the information gain we use an impurity metric like gini impurity.
+
+        # 4. Now we take the best feature and split the data into nodes based on feature.
+        
+        # 5. if we started from 1 node where the feature X(binary) was mixed. The each child will have 
+        # each type of node. left will have say 1 and right will have say 0.
+        
+        # 6. We will recursively repeat this until we reach a termination condition that is either we have completely
+        # purified the data or we have reached the max depth that we can do recursively. 
+
+        # Note: there are many other impurity metrics like entropy which is similar to KL divergance. (See notes for KL divergance)
+
+        # this will be a recursive call
+        # The possible terminatopn are two states
+        # either max depth reached or all the nodes are same class
+        if len(set(y)) == 0 or depth == 0:
+            # Label the data based on majority split
+            most_common = Counter(y).most_common(1)[0][0]
+            return Node(value=most_common)
+        
         pass
 
     def  predict(X, y):
