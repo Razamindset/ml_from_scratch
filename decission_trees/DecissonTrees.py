@@ -62,9 +62,9 @@ class Node:
     def is_leaf(self):
         return self.value is not None
 
-class DecissionTree:
-    def __init__(self):
-        pass
+class DecisionTree:
+    def __init__(self, max_depth=4):
+        self.max_depth = max_depth
 
     def fit(self, X, y, depth=0):
         # * The flow is something like this.
@@ -88,13 +88,91 @@ class DecissionTree:
         # this will be a recursive call
         # The possible terminatopn are two states
         # either max depth reached or all the nodes are same class
-        if len(set(y)) == 0 or depth == 0:
+        if len(set(y)) == 1 or depth >= self.max_depth:
             # Label the data based on majority split
             most_common = Counter(y).most_common(1)[0][0]
             return Node(value=most_common)
         
-        pass
 
-    def  predict(X, y):
-        pass
+        n_samples, n_features = X.shape
+        best_gain = 0
+        best_split = None
 
+        # Lets try all features and thresholds to calculate the best one
+        for feature in range(n_features):
+
+            # For thresholds we try all possible values for a feature
+
+            # ! This implemnetaion feeels personally overwhelming
+
+            thresholds = np.unique(X[:, feature])
+
+            for threshold in thresholds:
+                X_left, X_right, y_left, y_right =  split_data(X, y, feature, threshold=threshold)
+                if len(y_left) == 0 or len(y_right) == 0:
+                    continue # Not enough juice
+
+                gain = information_gain(y, y_left, y_right) 
+
+                if gain > best_gain:
+                    best_gain = gain
+                    best_split = (feature, threshold, X_left, X_right, y_left, y_right)
+                
+        if best_gain == 0:
+            # Can't improve impurity — make leaf
+            most_common = Counter(y).most_common(1)[0][0]
+            return Node(value=most_common)
+        
+        # At this point we have completed the folowing
+        # Best threshold and best gain for that threshold
+        # Split the data according to the best calculated thresholds.
+        # After splitting now we can do recursive calls for the left and right data
+
+        #* Recursion Babbyyyyyyyy
+        feature, threshold, X_left, X_right, y_left, y_right = best_split
+        left_node = self.fit(X_left, y_left, depth + 1) # this will be called recursively until reaches leaf
+        right_node = self.fit(X_right, y_right, depth + 1)
+
+        # The folowing code will run after all the recusive calls are complete
+        # We can assume that it is a parent and we can complete our recursion.
+
+        node = Node(feature, threshold, left=left_node, right=right_node)
+        if depth == 0:
+            self.root = node
+            return self.root
+        else:
+            return node
+
+    def predict_one(self, X, node: Node):
+        if node.is_leaf():
+            return node.value
+        
+        if X[node.feature] <= node.threshold:
+            return self.predict_one(X, node.left)
+
+        else:
+            return self.predict_one(X, node.right)
+    
+    def predict(self, X):
+        # Take each row and call predictions
+        assert hasattr(self, "root") , "Error: Tree not fiited yet."
+        return np.array([self.predict_one(x, self.root) for x in X])
+
+X = np.array([
+    [2.7, 2.5],
+    [1.3, 1.5],
+    [3.0, 3.5],
+    [0.8, 0.6],
+])
+
+y = np.array([1, 0, 1, 0])
+
+tree = DecisionTree(max_depth=2)
+tree.fit(X, y)
+
+print(tree.predict(np.array([[1.0, 1.0], [3.0, 3.0]])))  # → [0, 1]
+
+### It works OMY.
+### I am the best programmer in the world.
+### God choose me to this. 
+### I am basically blessed.
