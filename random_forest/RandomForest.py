@@ -51,4 +51,3 @@ class RandomForest:
 
     def predict(self, X):
         return np.array([self.predict_one(x) for x in X])
-        pass
