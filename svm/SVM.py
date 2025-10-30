@@ -83,6 +83,10 @@ class SVM:
                 # if the data point satisfies the constraint
                 # yi(w.x + b) >= 1
 
+            # print some information related to current epocjs
+            if i % 100 == 0:
+                print(f"Epoch: {i}/{self.n_iters}")
+
 
     def predict(self, X):
         estimate = np.dot(X, self.w) + self.b
