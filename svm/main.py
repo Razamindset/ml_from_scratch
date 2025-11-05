@@ -11,7 +11,7 @@ from visulize import visualize_svm
 #! Need to look at this villian later
 
 X, y = datasets.make_blobs(
-    n_samples=200, n_features=2, centers=2, cluster_std=0.6, random_state=42
+    n_samples=200, n_features=2, centers=2, cluster_std=0.2, random_state=55
 )
 
 plt.scatter(X[:, 0], X[:, 1], c=y, cmap='bwr')
@@ -20,7 +20,7 @@ plt.show()
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True, random_state=69)
 
-model = SVM(n_iters=3000, learning_rate=0.1, lambda_param=0.001)
+model = SVM(n_iters=3000, learning_rate=0.001, lambda_param=0.001)
 
 model.fit(X_train, y_train)
 
